@@ -1,7 +1,7 @@
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom'
 import CustomTodo, { capStr } from '@/components/CustomTodo';
-import { useRouter } from 'next/router';
+
 
 
 
@@ -10,5 +10,26 @@ describe('Custom Todo', () => {
         expect(capStr("hello")).toBe("Hello")
         expect(capStr("10")).toBe("10")
         expect(capStr("Hello")).toBe("Hello")
+    })
+
+    it("Should have route name on page", () => {
+        render(<CustomTodo routeID={'fruits'} />);
+
+        const routeName = screen.getByRole("heading",{name:"Fruits Todo List"});
+
+        expect(routeName).toBeInTheDocument();
+    })
+
+    it("Should add item to item list", () => {
+        
+
+        render(<CustomTodo routeID={"fruits"}/>);
+        const addBtn = screen.getByText("Add");
+
+        fireEvent.click(addBtn);
+        
+        const listLength = screen.getByText("Current items in list : 1")
+        expect(listLength).toBeInTheDocument()
+
     })
 })

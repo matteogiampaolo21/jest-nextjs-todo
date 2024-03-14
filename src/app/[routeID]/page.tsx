@@ -2,10 +2,10 @@ import React from 'react'
 import CustomTodo from '@/components/CustomTodo'
 import { useParams } from 'next/navigation'
 
-const page = () => {
+const page = ({params}: {params:{routeID:string}}) => {
   return (
     <>
-        <CustomTodo/>
+        <CustomTodo routeID={params.routeID} />
     </>
   )
 }

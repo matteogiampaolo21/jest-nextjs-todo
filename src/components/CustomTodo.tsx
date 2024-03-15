@@ -15,12 +15,21 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
     
     const [item,setItem] = useState("");
-    const [items,setItems] = useState<string[]>([]);
+    const [items,setItems] = useState<{text:string,date:Date}[]>([]);
 
     const addItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
-        setItems([...items,item]);
+        const currentDate = new Date();
+        const itemObj = {text:item,date:currentDate}
+        setItems([...items,itemObj]);
         setItem("");
+    }
+
+    const removeItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, itemDate:Date) => {
+        e.preventDefault();
+        const newArray = items.filter(item => item.date !== itemDate);
+        setItems(newArray);
+
     }
 
 
@@ -31,13 +40,23 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
                 <p className='text-lg'>Add items to your list!</p>
                 <form className="grid grid-cols-4 mt-3 gap-5">
                     <input onChange={e => setItem(e.target.value)} value={item} className="col-span-3 bg-neutral-200 rounded px-3 py-1" type="text" placeholder="Add item to list!" />
-                    <button onClick={e => addItem(e)} className="bg-blue-500 text-center text-white px-2 py-1 rounded">Add</button>
+                    <button onClick={e => addItem(e)} className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded">Add</button>
                 </form>
             </header>
 
             <main className='text-center my-5 w-500 mx-auto bg-white rounded px-3 py-2 shadow'>
-                <p>Current items in list : {items.length} </p>
+                <p className=''>Current items in list : {items.length} </p>
 
+
+                {items.map((listItem,index) => (
+                    <article className='bg-neutral-200 px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-3 text-left' key={index}>
+                        <div className='col-span-3'>
+                            <h3 className='text-lg'>{listItem.text}</h3>
+                            <p className='text-sm'> {`${listItem.date.getDate()} / ${listItem.date.getMonth()} / ${listItem.date.getFullYear()} `} </p>
+                        </div>
+                        <button onClick={e => removeItem(e,listItem.date)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
+                    </article>
+                ))}
             </main>
         </main>
     )

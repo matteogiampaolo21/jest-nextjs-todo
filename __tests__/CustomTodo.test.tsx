@@ -32,4 +32,21 @@ describe('Custom Todo', () => {
         expect(listLength).toBeInTheDocument()
 
     })
+    
+    it("Should remove item to item list", () => {
+        
+
+        render(<CustomTodo routeID={"fruits"}/>);
+        
+        const addBtn = screen.getByText("Add");
+        fireEvent.click(addBtn);
+        
+        const removeBtn = screen.getByText("Remove");
+        fireEvent.click(removeBtn);
+
+        
+        const listLength = screen.getByText("Current items in list : 0");
+        expect(listLength).toBeInTheDocument()
+
+    })
 })

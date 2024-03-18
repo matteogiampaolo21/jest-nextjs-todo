@@ -1,6 +1,8 @@
 'use client'
 import React, { useState, FC } from 'react'
+import { Reorder, useMotionValue } from 'framer-motion'
 import { useParams } from 'next/navigation'
+import { useRaisedShadow } from './framerBoxShadow'
 
 export const capStr = (str:string) => {
     if (str[0].match(/[a-z]/i)) {            
@@ -16,6 +18,10 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
     
     const [item,setItem] = useState("");
     const [items,setItems] = useState<{text:string,date:Date}[]>([]);
+
+    // Framer Motion
+    const y = useMotionValue(0);
+    const boxShadow = useRaisedShadow(y);
 
     const addItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
@@ -47,16 +53,19 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
             <main className='text-center my-5 w-500 mx-auto bg-white rounded px-3 py-2 shadow'>
                 <p className=''>Current items in list : {items.length} </p>
 
-
-                {items.map((listItem,index) => (
-                    <article className='bg-neutral-200 px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-3 text-left' key={index}>
-                        <div className='col-span-3'>
-                            <h3 className='text-lg'>{listItem.text}</h3>
-                            <p className='text-sm'> {`${listItem.date.getDate()} / ${listItem.date.getMonth()} / ${listItem.date.getFullYear()} `} </p>
-                        </div>
-                        <button onClick={e => removeItem(e,listItem.date)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
-                    </article>
-                ))}
+                <Reorder.Group values={items} onReorder={setItems}>
+                    {items.map((listItem,index) => (
+                        <Reorder.Item value={listItem}  key={listItem.date.getTime()}>
+                            <article className='bg-neutral-200 px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-5 text-left'>
+                                <div className='col-span-3'>
+                                    <h3 className='text-lg'>{listItem.text}</h3>
+                                    <p className='text-sm'> {`${listItem.date.getDate()} / ${listItem.date.getMonth()} / ${listItem.date.getFullYear()} `} </p>
+                                </div>
+                                <button onClick={e => removeItem(e,listItem.date)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
+                            </article>
+                        </Reorder.Item>
+                    ))}
+                </Reorder.Group>
             </main>
         </main>
     )

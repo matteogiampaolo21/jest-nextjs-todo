@@ -1,8 +1,6 @@
 'use client'
-import React, { useState, FC } from 'react'
-import { Reorder, useMotionValue } from 'framer-motion'
-import { useParams } from 'next/navigation'
-import { useRaisedShadow } from './framerBoxShadow'
+import React, { useState, FC, useEffect } from 'react'
+import { Reorder } from 'framer-motion'
 
 export const capStr = (str:string) => {
     if (str[0].match(/[a-z]/i)) {            
@@ -17,23 +15,43 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
     
     const [item,setItem] = useState("");
-    const [items,setItems] = useState<{text:string,date:Date}[]>([]);
+    const [items,setItems] = useState<{text:string,date:string,id:number}[]>([]);
 
-    // Framer Motion
-    const y = useMotionValue(0);
-    const boxShadow = useRaisedShadow(y);
+
+
+    useEffect(()=> {
+        const savedItems = JSON.parse(localStorage.getItem(routeID) || "[]");
+        setItems(savedItems);
+        localStorage.setItem(routeID, JSON.stringify(savedItems));
+    },[])
+
+
+
+    // let value
+    // value = localStorage.getItem("favoriteNumber") || "";
+
+    // localStorage.setItem("favoriteNumber", "hello world!")
+
+
 
     const addItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault()
+
         const currentDate = new Date();
-        const itemObj = {text:item,date:currentDate}
+        const itemObj = {text:item,date:`${currentDate.getDate()} / ${currentDate.getMonth()} / ${currentDate.getFullYear()} `,id:currentDate.getTime()}
+
+        const savedItems:{text:string,date:string}[] = JSON.parse(localStorage.getItem(routeID) || "[]");
+        savedItems.push(itemObj);
+        localStorage.setItem(routeID, JSON.stringify(savedItems))
+
+
         setItems([...items,itemObj]);
         setItem("");
     }
 
-    const removeItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, itemDate:Date) => {
+    const removeItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, itemId:number) => {
         e.preventDefault();
-        const newArray = items.filter(item => item.date !== itemDate);
+        const newArray = items.filter(item => item.id !== itemId);
         setItems(newArray);
 
     }
@@ -55,13 +73,13 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
                 <Reorder.Group values={items} onReorder={setItems}>
                     {items.map((listItem,index) => (
-                        <Reorder.Item value={listItem}  key={listItem.date.getTime()}>
+                        <Reorder.Item value={listItem}  key={listItem.id}>
                             <article className='bg-neutral-200 px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-5 text-left'>
                                 <div className='col-span-3'>
                                     <h3 className='text-lg'>{listItem.text}</h3>
-                                    <p className='text-sm'> {`${listItem.date.getDate()} / ${listItem.date.getMonth()} / ${listItem.date.getFullYear()} `} </p>
+                                    <p className='text-sm'> {listItem.date}  </p>
                                 </div>
-                                <button onClick={e => removeItem(e,listItem.date)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
+                                <button onClick={e => removeItem(e,listItem.id)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
                             </article>
                         </Reorder.Item>
                     ))}

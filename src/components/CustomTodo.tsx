@@ -56,10 +56,15 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
     }
 
+    const handleListChange = () => {
+        const changedItems = JSON.stringify(items);
+        localStorage.setItem(routeID,changedItems);
+    }
+
 
     return (
         <main>
-            <header className='text-center my-5 w-500 mx-auto bg-white rounded px-3 py-2 shadow'>
+            <header className='text-center my-5 w-500 mx-auto bg-neutral-100 rounded px-3 py-2 shadow'>
                 <h1 className='break-words text-2xl'> {capStr(routeID)} Todo List </h1>
                 <p className='text-lg'>Add items to your list!</p>
                 <form className="grid grid-cols-4 mt-3 gap-5">
@@ -68,16 +73,16 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
                 </form>
             </header>
 
-            <main className='text-center my-5 w-500 mx-auto bg-white rounded px-3 py-2 shadow'>
+            <main className='text-center my-5 w-500 mx-auto bg-neutral-100 rounded px-3 py-2 shadow'>
                 <p className=''>Current items in list : {items.length} </p>
 
                 <Reorder.Group values={items} onReorder={setItems}>
                     {items.map((listItem,index) => (
-                        <Reorder.Item value={listItem}  key={listItem.id}>
-                            <article className='bg-neutral-200 px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-5 text-left'>
+                        <Reorder.Item value={listItem} onMouseUp={handleListChange}  key={listItem.id}>
+                            <article className='bg-white px-2 py-1 grid gap-2 grid-cols-4 items-center rounded shadow my-5 text-left'>
                                 <div className='col-span-3'>
                                     <h3 className='text-lg'>{listItem.text}</h3>
-                                    <p className='text-sm'> {listItem.date}  </p>
+                                    <p className='text-sm'> {listItem.date} | {index} </p>
                                 </div>
                                 <button onClick={e => removeItem(e,listItem.id)} className='bg-neutral-100 h-10 shadow rounded duration-200 hover:bg-neutral-300'>Remove</button>
                             </article>

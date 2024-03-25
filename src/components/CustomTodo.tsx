@@ -52,6 +52,8 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
     const removeItem = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, itemId:number) => {
         e.preventDefault();
         const newArray = items.filter(item => item.id !== itemId);
+
+        localStorage.setItem(routeID, JSON.stringify(newArray))
         setItems(newArray);
 
     }
@@ -67,8 +69,9 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
             <header className='text-center my-5 w-500 mx-auto bg-neutral-100 rounded px-3 py-2 shadow'>
                 <h1 className='break-words text-2xl'> {capStr(routeID)} Todo List </h1>
                 <p className='text-lg'>Add items to your list!</p>
-                <form className="grid grid-cols-4 mt-3 gap-5">
-                    <input onChange={e => setItem(e.target.value)} value={item} className="col-span-3 bg-neutral-200 rounded px-3 py-1" type="text" placeholder="Add item to list!" />
+                <form className="grid grid-cols-6 mt-3 gap-5">
+                    <button className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded"> Clear </button>
+                    <input onChange={e => setItem(e.target.value)} value={item} className="col-span-4 bg-neutral-200 rounded px-3 py-1" type="text" placeholder="Add item to list!" />
                     <button onClick={e => addItem(e)} className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded">Add</button>
                 </form>
             </header>

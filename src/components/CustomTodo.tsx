@@ -58,6 +58,11 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
     }
 
+    const clearList = () => {
+        localStorage.setItem(routeID,"[]")
+        setItems([]);
+    }
+
     const handleListChange = () => {
         const changedItems = JSON.stringify(items);
         localStorage.setItem(routeID,changedItems);
@@ -66,13 +71,13 @@ const CustomTodo:FC<{routeID:string}> = ({ routeID }) => {
 
     return (
         <main>
-            <header className='text-center my-5 w-500 mx-auto bg-neutral-100 rounded px-3 py-2 shadow'>
-                <h1 className='break-words text-2xl'> {capStr(routeID)} Todo List </h1>
-                <p className='text-lg'>Add items to your list!</p>
-                <form className="grid grid-cols-6 mt-3 gap-5">
-                    <button className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded"> Clear </button>
-                    <input onChange={e => setItem(e.target.value)} value={item} className="col-span-4 bg-neutral-200 rounded px-3 py-1" type="text" placeholder="Add item to list!" />
-                    <button onClick={e => addItem(e)} className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded">Add</button>
+            <header className='text-center grid gap-x-5 grid-cols-6 my-5 w-500 mx-auto bg-neutral-100 rounded px-3 py-2 shadow'>
+                <h1 className='break-words text-2xl col-span-6'> {capStr(routeID)} Todo List </h1>
+                <p className='text-lg col-span-6 mb-3'>Add items to your list!</p>
+                <button onClick={clearList} className="bg-red-500 hover:bg-red-700 col-span-1 duration-200 text-center text-white px-2 py-1 rounded"> Clear </button>
+                <form className="grid grid-cols-6 col-span-5  gap-5">
+                    <input onChange={e => setItem(e.target.value)} value={item} className="col-span-5 bg-neutral-200 rounded px-3 py-1" type="text" placeholder="Add item to list!" />
+                    <button onClick={e => { addItem(e)} } className="bg-blue-500 hover:bg-blue-700 duration-200 text-center text-white px-2 py-1 rounded">Add</button>
                 </form>
             </header>
 

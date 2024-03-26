@@ -36,13 +36,13 @@ describe('Custom Todo', () => {
     it("Should remove item to item list", () => {
         
 
-        render(<CustomTodo routeID={"fruits"}/>);
+        render(<CustomTodo routeID={"randomlist"}/>);
         
         const addBtn = screen.getByText("Add");
         fireEvent.click(addBtn);
         
-        const removeBtn = screen.getByText("Remove");
-        fireEvent.click(removeBtn);
+        const removeBtn = screen.getAllByText("Remove");
+        fireEvent.click(removeBtn[0]);
 
         
         const listLength = screen.getByText("Current items in list : 0");

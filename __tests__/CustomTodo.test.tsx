@@ -1,4 +1,5 @@
 import {fireEvent, render, screen} from '@testing-library/react';
+import user from "@testing-library/user-event"
 import '@testing-library/jest-dom'
 import CustomTodo, { capStr } from '@/components/CustomTodo';
 
@@ -20,33 +21,54 @@ describe('Custom Todo', () => {
         expect(routeName).toBeInTheDocument();
     })
 
-    it("Should add item to item list", () => {
+    // it("Should add item to item list", () => {
         
 
-        render(<CustomTodo routeID={"fruits"}/>);
-        const addBtn = screen.getByText("Add");
+    //     render(<CustomTodo routeID={"fruits"}/>);
+    //     const addBtn = screen.getByText("Add");
 
-        fireEvent.click(addBtn);
+    //     fireEvent.click(addBtn);
         
-        const listLength = screen.getByText("Current items in list : 1")
-        expect(listLength).toBeInTheDocument()
+    //     const listLength = screen.getByText("Current items in list : 1")
+    //     expect(listLength).toBeInTheDocument()
 
-    })
+    // })
     
     it("Should remove item to item list", () => {
         
 
         render(<CustomTodo routeID={"randomlist"}/>);
         
-        const addBtn = screen.getByText("Add");
+        const addBtn = screen.getByRole("button",{name:"Add"});
         fireEvent.click(addBtn);
         
-        const removeBtn = screen.getAllByText("Remove");
-        fireEvent.click(removeBtn[0]);
+        const removeBtn = screen.getByRole("button",{name:"Remove"});
+        fireEvent.click(removeBtn);
 
         
         const listLength = screen.getByText("Current items in list : 0");
         expect(listLength).toBeInTheDocument()
 
     })
+    
+    it("Should add and show item in list", async () => {
+        user.setup()
+        render(<CustomTodo routeID={"testing-jest"}/>)
+        const inputBox = screen.getByRole("textbox");
+        const addBtn = screen.getByRole('button', {name: /add/i})
+
+        const testText = "Test the add feature"
+
+        await user.type(inputBox,testText);
+        expect(inputBox).toHaveValue(testText);
+
+        await user.click(addBtn)
+        expect(inputBox).toHaveValue("");
+        
+        const item = screen.getByRole('heading', {name: testText})
+
+        expect(item).toBeInTheDocument();
+        
+    })
+
 })

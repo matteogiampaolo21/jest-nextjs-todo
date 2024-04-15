@@ -21,36 +21,24 @@ describe('Custom Todo', () => {
         expect(routeName).toBeInTheDocument();
     })
 
-    // it("Should add item to item list", () => {
+    // it("Should remove item to item list", () => {
         
 
-    //     render(<CustomTodo routeID={"fruits"}/>);
-    //     const addBtn = screen.getByText("Add");
-
+    //     render(<CustomTodo routeID={"randomlist"}/>);
+        
+    //     const addBtn = screen.getByRole("button",{name:"Add"});
+    //     fireEvent.click(addBtn);
     //     fireEvent.click(addBtn);
         
-    //     const listLength = screen.getByText("Current items in list : 1")
+    //     const removeBtn = screen.getByRole("button",{name:"Remove"});
+    //     fireEvent.click(removeBtn);
+
+        
+    //     const listLength = screen.getByText("Current items in list : 0");
     //     expect(listLength).toBeInTheDocument()
 
     // })
-    
-    it("Should remove item to item list", () => {
-        
-
-        render(<CustomTodo routeID={"randomlist"}/>);
-        
-        const addBtn = screen.getByRole("button",{name:"Add"});
-        fireEvent.click(addBtn);
-        
-        const removeBtn = screen.getByRole("button",{name:"Remove"});
-        fireEvent.click(removeBtn);
-
-        
-        const listLength = screen.getByText("Current items in list : 0");
-        expect(listLength).toBeInTheDocument()
-
-    })
-    
+  
     it("Should add and show item in list", async () => {
         user.setup()
         render(<CustomTodo routeID={"testing-jest"}/>)

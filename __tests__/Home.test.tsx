@@ -5,18 +5,22 @@ import Home from '@/app/page';
 import DummyData from '@/components/DummyData';
 import { act } from 'react-dom/test-utils';
 
-function mockFetch(data: any) {
+function mockFetch(data: any,isOk:boolean) {
   return jest.fn().mockImplementation(() =>
     Promise.resolve({
-      ok: true,
+      ok: isOk,
       json: () => data,
     }),
   );
 }
-window.fetch = mockFetch({id:0,firstName:"John",lastName:"Marston"});
 
 
 describe('Home', () => {
+    const fakeData = {
+        users:[{id:0,firstName:"John",lastName:"Marston"},{id:1,firstName:"Tim",lastName:"Bread"}]
+    }
+    window.fetch = mockFetch(fakeData,true);
+    
     it("should have specific button and input in Home Page", () => {
         render(<FindTodo/>);
         const specificButton = screen.getByRole("link",{name:"Find List"});
@@ -31,12 +35,16 @@ describe('Home', () => {
         )
     })
     test('fetch works', async () => {
-        render(<DummyData/>)
-        
-        const user = await screen.findAllByRole("listitem");
-        expect(user).toHaveLength(1)
+      render(<DummyData/>)
+      const user = await screen.findAllByRole("listitem");
+      expect(user).toHaveLength(2)
+    })
 
-        
+    it("displays error when promise is not ok", async () => {
+      window.fetch = mockFetch(fakeData,false)
+      render(<DummyData/>)
+      const errorMsg = await screen.findByRole("heading",{name:"ERROR!!"});
+      expect(errorMsg).toBeInTheDocument();
     })
 
    
